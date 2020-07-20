@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+    <bean id="spreadsheetTableQueries" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="INSERT" value="INSERT INTO spreadsheet_files (name, file_content, extension) VALUES (?, ?, ?)" />
+                <entry key="DELETE" value="DELETE FROM spreadsheet_files WHERE name = ?" />
+                <entry key="FIND_BY_ID" value="SELECT * FROM spreadsheet_files WHERE file_id = ?" />
+                <entry key="FIND_BY_NAME" value="SELECT * FROM spreadsheet_files WHERE name = ?" />
+                <entry key="FIND_ALL" value="SELECT * FROM spreadsheet_files" />
+            </map>
+        </constructor-arg>
+    </bean>
+</beans>

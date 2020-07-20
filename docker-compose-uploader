@@ -1,0 +1,11 @@
+#!/bin/bash
+# maven x docker script
+mvn clean
+mvn compile
+mvn package 
+
+docker rm -f uploader-container
+docker rmi -f $(docker images -q xls-xlsx-uploader-api)
+docker build -t xls-xlsx-uploader-api:latest .
+docker-compose -f docker-compose.yml up
+

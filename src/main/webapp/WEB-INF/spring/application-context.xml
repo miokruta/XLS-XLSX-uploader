@@ -23,9 +23,13 @@
         <constructor-arg name="queries" ref="spreadsheetTableQueries" />
     </bean>
 
-    <!-- CONTROLLERS -->
+    <!-- MODEL ASSEMBLER -->
+    <bean id="spreadsheetFileModelAssembler" class="utils.SpreadsheetFileModelAssembler" />
+
+    <!-- REST CONTROLLERS -->
     <bean id="spreadsheetFilesController" class="controller.SpreadsheetFilesRestController">
-        <constructor-arg name="dataTransferObjectRepository" ref="spreadsheetFileRepo" />
+        <constructor-arg name="repository" ref="spreadsheetFileRepo" />
+        <constructor-arg name="assembler" ref="spreadsheetFileModelAssembler" />
     </bean>
 
     <!-- VIEW RESOLVER -->

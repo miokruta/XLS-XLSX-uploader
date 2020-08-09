@@ -4,7 +4,7 @@
         <constructor-arg>
             <map>
                 <entry key="INSERT" value="INSERT INTO spreadsheet_files (name, file_content, extension) VALUES (?, ?, ?)" />
-                <entry key="DELETE" value="DELETE FROM spreadsheet_files WHERE name = ?" />
+                <entry key="DELETE_BY_ID" value="DELETE FROM spreadsheet_files WHERE file_id = ?" />
                 <entry key="FIND_BY_ID" value="SELECT * FROM spreadsheet_files WHERE file_id = ?" />
                 <entry key="FIND_BY_NAME" value="SELECT * FROM spreadsheet_files WHERE name = ?" />
                 <entry key="FIND_ALL" value="SELECT * FROM spreadsheet_files" />

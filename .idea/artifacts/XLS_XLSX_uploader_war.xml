@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="XLS-XLSX-uploader:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>XLS-XLSX-uploader</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="XLS-XLSX-uploader-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="XLS-XLSX-uploader:war exploded" />
+    </root>
+  </artifact>
+</component>

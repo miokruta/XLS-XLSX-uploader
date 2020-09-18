@@ -1,4 +1,4 @@
-[Prototype] Spreadsheet Files Hosting REST API 
+[Prototype] Spreadsheet Files Hosting REST API using POSTGRESQL as DB
 
 Frameworks/Libraries used
 - hateoas
@@ -10,21 +10,21 @@ Frameworks/Libraries used
 - spring-data-jpa
 
 API consuming: 
-  acceptable-types:
-    XLS,
-    XLSX
+  - acceptable-types:
+    - XLS,
+    - XLSX
 
-  endpoints:
-    GET: 
-      all-files: 
-        URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files
-      single-file:
-        URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files/id
-      download-file
-        URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files/download/id
-    POST: 
-        URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files
-    PUT: 
-        URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files/id
-    DELETE: 
-        URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files/id
+  - endpoints:
+     - GET: 
+      - all-files: 
+        - URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files
+      - single-file:
+        - URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files/id
+      - download-file
+        - URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files/download/id
+    - POST: 
+        - URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files
+    - PUT: 
+        - URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files/id
+    - DELETE: 
+        - URL: http://spreadsheethostingrestapi-env.eba-rmw59rni.us-east-1.elasticbeanstalk.com/spreadsheet-files/id

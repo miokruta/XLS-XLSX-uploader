@@ -1,12 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
-    <bean id="postgresProperties" class="java.util.HashMap">
-        <constructor-arg>
-            <map>
-                <entry key="URL" value="jdbc:postgresql://172.18.0.2:5432/postgres" />
-                <entry key="LOGIN" value="docker" />
-                <entry key="PASSWORD" value="docker" />
-            </map>
-        </constructor-arg>
-    </bean>
-</beans>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>AWS VARIABLES</comment>
+    <entry key="jdbc.driverClassName">org.postgresql.Driver</entry>
+    <entry key="jdbc.url">jdbc:postgresql://postgres.crcrg220pvxg.us-east-1.rds.amazonaws.com:5432/postgres</entry>
+    <entry key="jdbc.username">creazy</entry>
+    <entry key="jdbc.password"></entry>
+</properties>

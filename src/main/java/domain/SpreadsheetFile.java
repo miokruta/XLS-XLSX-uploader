@@ -1,11 +1,15 @@
-package model;
+package domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import enums.FileExtensions;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
 
 @Entity
-@Table(name = "spreadsheet_files", uniqueConstraints={@UniqueConstraint(columnNames={"id"})})
+@Table(name = "spreadsheet_files", uniqueConstraints={@UniqueConstraint(columnNames={"file_id"})})
 
 public class SpreadsheetFile{
 
@@ -17,13 +21,24 @@ public class SpreadsheetFile{
     @Column(name = "name", length=20)
     private String name;
 
+    @JsonIgnore
+    @E
     @Column(name = "file_content")
-    private byte[] spreadsheetFileContent;
+    private byte[] content;
 
+    @Enumerated(EnumType.STRING)
+    @Type(type = "enums.FileExtensionTypePostgreSQL")
     @Column(name = "extension")
-    private String extension;
+    private FileExtensions extension;
 
-    public SpreadsheetFile() {}
+    protected SpreadsheetFile() {}
+
+    public SpreadsheetFile(long id, String name, byte[] spreadsheetFileContent, FileExtensions extension) {
+        this.id = id;
+        this.name = name;
+        this.content = spreadsheetFileContent;
+        this.extension = extension;
+    }
 
     public long getId() {
         return id;
@@ -41,19 +56,19 @@ public class SpreadsheetFile{
         this.name = name;
     }
 
-    public byte[] getSpreadsheetFileContent() {
-        return spreadsheetFileContent;
+    public byte[] getContent() {
+        return content;
     }
 
-    public void setSpreadsheetFileContent(byte[] spreadsheetFileContent) {
-        this.spreadsheetFileContent = spreadsheetFileContent;
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 
-    public String getExtension() {
+    public FileExtensions getExtension() {
         return extension;
     }
 
-    public void setExtension(String extension) {
+    public void setExtension(FileExtensions extension) {
         this.extension = extension;
     }
 
@@ -68,13 +83,13 @@ public class SpreadsheetFile{
         SpreadsheetFile dto = (SpreadsheetFile) obj;
         return Objects.equals(this.id, dto.getId())
                 && Objects.equals(this.name, dto.getName())
-                && Arrays.equals(this.spreadsheetFileContent, dto.getSpreadsheetFileContent())
-                && Objects.equals(this.extension, dto.getExtension());
+                && Arrays.equals(this.content, dto.content)
+                && this.extension == dto.extension;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name, this.spreadsheetFileContent, this.extension);
+        return Objects.hash(this.id, this.name, this.content, this.extension.name());
     }
 
     @Override
@@ -82,7 +97,7 @@ public class SpreadsheetFile{
         return "SpreadsheetFileDataTransferObject{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", extension='" + extension + '\'' +
+                ", extension='" + extension.name() + '\'' +
                 '}';
     }
 }

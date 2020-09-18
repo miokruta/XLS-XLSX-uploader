@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UnsupportedSpreadsheetFileFormatAdvice {
 
     @ResponseBody
-    @ExceptionHandler(UnsupportedSpreadsheetFileFormatException.class)
+    @ExceptionHandler(UnsupportedMultipartFileFormatException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    String UnsupportedSpreadsheetFileFormatAdvice(UnsupportedSpreadsheetFileFormatException e){
+    String unsupportedSpreadsheetFileFormatAdvice(UnsupportedMultipartFileFormatException e){
         return e.getMessage();
 
     }

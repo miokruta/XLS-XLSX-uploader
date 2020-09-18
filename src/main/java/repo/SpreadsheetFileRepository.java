@@ -1,10 +1,9 @@
 package repo;
 
+import domain.SpreadsheetFile;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface SpreadsheetFileRepository extends JpaRepository<SpreadsheetFileDataTransferObject, Long> {
-
+@Repository
+public interface SpreadsheetFileRepository extends JpaRepository<SpreadsheetFile, Long> {
 }

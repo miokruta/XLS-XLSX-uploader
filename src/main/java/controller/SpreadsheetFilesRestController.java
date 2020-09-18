@@ -2,19 +2,19 @@ package controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-import exception.EmptyMultipartFileException;
+import domain.SpreadsheetFile;
 import exception.SpreadsheetFileNotFoundException;
+import org.apache.poi.EmptyFileException;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.web.multipart.MultipartFile;
-import repo.IDataTransferObjectRepository;
-import model.SpreadsheetFileDataTransferObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.SpreadsheetFileService;
 import utils.SpreadsheetFileMapper;
 import utils.SpreadsheetFileModelAssembler;
 
@@ -23,24 +23,24 @@ import java.util.stream.Collectors;
 
 @RestController
 public class SpreadsheetFilesRestController {
-    private IDataTransferObjectRepository repository;
+    private SpreadsheetFileService service;
     private SpreadsheetFileModelAssembler assembler;
 
     private SpreadsheetFilesRestController() {}
 
     public SpreadsheetFilesRestController(
-            IDataTransferObjectRepository repository,
+            SpreadsheetFileService service,
             SpreadsheetFileModelAssembler assembler)
     {
-        this.repository = repository;
+        this.service = service;
         this.assembler = assembler;
     }
 
     //AGGREGATE ROOT
     @GetMapping(value = "/spreadsheet-files")
-    public CollectionModel<EntityModel<SpreadsheetFileDataTransferObject>> all() {
-        List<EntityModel<SpreadsheetFileDataTransferObject>> spreadsheetFiles =
-                repository.findAll().stream()
+    public CollectionModel<EntityModel<SpreadsheetFile>> all() {
+        List<EntityModel<SpreadsheetFile>> spreadsheetFiles =
+                service.listAll().stream()
                         .map(assembler::toModel)
                         .collect(Collectors.toList());
 
@@ -50,12 +50,11 @@ public class SpreadsheetFilesRestController {
 
     @PostMapping(value = "/spreadsheet-files")
     public ResponseEntity<?> importFile(@RequestParam("file") final MultipartFile file) {
-        SpreadsheetFileDataTransferObject spreadsheetFileDataTransferObject =
-                (SpreadsheetFileDataTransferObject) repository.save(SpreadsheetFileMapper.mapMultipartFile(file)
-                                             .orElseThrow(() -> new EmptyMultipartFileException("File is empty")));
+        SpreadsheetFile spreadsheetFile = service.save(SpreadsheetFileMapper.mapMultipartFile(file))
+                .orElseThrow(() -> new EmptyFileException());
 
-        EntityModel<SpreadsheetFileDataTransferObject> entityModel =
-            assembler.toModel(spreadsheetFileDataTransferObject);
+        EntityModel<SpreadsheetFile> entityModel =
+            assembler.toModel(spreadsheetFile);
 
         return ResponseEntity
             .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -64,27 +63,25 @@ public class SpreadsheetFilesRestController {
 
     //SINGLE FILE INFO
     @GetMapping("/spreadsheet-files/{id}")
-    public EntityModel<SpreadsheetFileDataTransferObject> one(@PathVariable Long id) {
-        SpreadsheetFileDataTransferObject spreadsheetFileDataTransferObject =
-                (SpreadsheetFileDataTransferObject) repository.findById(id)
+    public EntityModel<SpreadsheetFile> one(@PathVariable Long id) {
+        SpreadsheetFile spreadsheetFile = service.get(id)
                         .orElseThrow(() -> new SpreadsheetFileNotFoundException(id));
 
-        return assembler.toModel(spreadsheetFileDataTransferObject);
+        return assembler.toModel(spreadsheetFile);
     }
 
     //
     @PutMapping("/spreadsheet-files/{id}")
     public ResponseEntity<?> changeFileName(@RequestParam String newName, @PathVariable Long id) {
-        SpreadsheetFileDataTransferObject spreadsheetFileDataTransferObject =
-                (SpreadsheetFileDataTransferObject) repository.findById(id)
+        SpreadsheetFile spreadsheetFile = service.get(id)
                         .orElseThrow(() -> new SpreadsheetFileNotFoundException(id));
 
-        EntityModel<SpreadsheetFileDataTransferObject> entityModel =
-                assembler.toModel(new SpreadsheetFileDataTransferObject(
+        EntityModel<SpreadsheetFile> entityModel =
+                assembler.toModel(new SpreadsheetFile(
                         id,
                         newName,
-                        spreadsheetFileDataTransferObject.fileContent(),
-                        spreadsheetFileDataTransferObject.getExtension()
+                        spreadsheetFile.getContent(),
+                        spreadsheetFile.getExtension()
                 ));
 
         return ResponseEntity
@@ -95,7 +92,7 @@ public class SpreadsheetFilesRestController {
     //
     @DeleteMapping("/spreadsheet-files/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
-        repository.deleteById(id);
+        service.delete(id);
 
         return ResponseEntity.noContent().build();
     }
@@ -103,8 +100,7 @@ public class SpreadsheetFilesRestController {
     //SINGLE FILE DOWNLOAD
     @GetMapping("/spreadsheet-files/download/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
-        SpreadsheetFileDataTransferObject spreadsheetFileDataTransferObject =
-                (SpreadsheetFileDataTransferObject) repository.findById(id)
+        SpreadsheetFile spreadsheetFileDataTransferObject = service.get(id)
                 .orElseThrow(() -> new SpreadsheetFileNotFoundException(id));
 
         HttpHeaders headers = new HttpHeaders();
@@ -115,7 +111,7 @@ public class SpreadsheetFilesRestController {
                 spreadsheetFileDataTransferObject.getName());
 
         return new ResponseEntity<>(
-                spreadsheetFileDataTransferObject.fileContent(),
+                spreadsheetFileDataTransferObject.getContent(),
                 headers,
                 HttpStatus.OK
         );

@@ -7,20 +7,17 @@
         http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <mvc:annotation-driven />
+    <context:component-scan base-package="repo">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
 
     <!-- XMLs IMPORT -->
     <import resource="../database/database-queries.xml"/>
-    <import resource="../database/database-properties.xml"/>
+    <import resource="spring-data-jpa.xml"/>
 
-    <!-- DAOs -->
-    <bean id="jdbcPostgresDAO" class="dao.JDBCPostgreDataAccessObject">
-        <constructor-arg name="properties" ref="postgresProperties" />
-    </bean>
-
-    <!-- REPOSITORIES -->
-    <bean id="spreadsheetFileRepo" class="repo.SpreadsheetFileRepository">
-        <constructor-arg name="dao" ref="jdbcPostgresDAO" />
-        <constructor-arg name="queries" ref="spreadsheetTableQueries" />
+    <!-- SERVICES -->
+    <bean id="spreadsheetFileService" class="service.SpreadsheetFileService">
+        <constructor-arg name="repository" ref="spreadsheetFileRepository"/>
     </bean>
 
     <!-- MODEL ASSEMBLER -->
@@ -28,16 +25,8 @@
 
     <!-- REST CONTROLLERS -->
     <bean id="spreadsheetFilesController" class="controller.SpreadsheetFilesRestController">
-        <constructor-arg name="repository" ref="spreadsheetFileRepo" />
+        <constructor-arg name="service" ref="spreadsheetFileService" />
         <constructor-arg name="assembler" ref="spreadsheetFileModelAssembler" />
-    </bean>
-
-    <!-- VIEW RESOLVER -->
-    <bean id="viewResolver"
-          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-        <property name="prefix" value="/view/"/>
-        <property name="suffix" value=".jsp"/>
     </bean>
 
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

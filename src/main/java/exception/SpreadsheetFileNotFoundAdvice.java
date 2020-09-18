@@ -12,7 +12,7 @@ public class SpreadsheetFileNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(SpreadsheetFileNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String SpreadsheetFileNotFoundAdvice(SpreadsheetFileNotFoundException e){
+    String spreadsheetFileNotFoundAdvice(SpreadsheetFileNotFoundException e){
         return e.getMessage();
     }
 }
